@@ -74,7 +74,10 @@ export function checkSpecs(
       report.reasons.push(`CPU is below minimum (user tier: ${userCpuTier}, required: ${minCpuTier})`);
     }
     if (!gpuMeets) {
-      report.reasons.push(`GPU is below minimum (user tier: ${userGpuTier}, required: ${minGpuTier})`);
+      const gpuReason = userGpuTier <= 800 
+        ? "Integrated graphics may not support the graphical intensity of this game." 
+        : `GPU is below minimum (user tier: ${userGpuTier}, required: ${minGpuTier})`;
+      report.reasons.push(gpuReason);
     }
     if (!ramMeets) {
       report.reasons.push(`RAM is below minimum (you have: ${userRam}GB, required: ${minRam}GB)`);

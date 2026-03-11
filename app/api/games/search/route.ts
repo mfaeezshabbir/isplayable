@@ -17,8 +17,8 @@ export async function GET(request: Request) {
     const offset = parseInt(searchParams.get('offset') || '0', 10);
 
     let apicalypseQuery = `
-      fields id, name, slug, cover.url, platforms.name, rating, release_dates.date, genres.name, websites.url, websites.category;
-      where platforms = (1) & rating >= 60 & release_dates.date > 0
+      fields id, name, slug, cover.url, platforms.name, rating, release_dates.date, genres.name, websites.url, websites.category, summary;
+      where platforms = (6) & rating >= 60 & release_dates.date > 0
     `;
 
     // Add search term if provided
@@ -38,15 +38,34 @@ export async function GET(request: Request) {
     `;
 
     const games = await fetchIGDB({ query: apicalypseQuery });
+    const gamesData = Array.isArray(games) ? games : [];
 
-    const gamesWithRequirements: GameWithRequirements[] = (games as any[]).map((game) => ({
+    const gamesWithRequirements: GameWithRequirements[] = gamesData.map((game: any) => ({
       ...game,
       cover: game.cover
         ? {
             id: game.cover.id,
-            url: `https:${game.cover.url}`,
+            url: `https:${game.cover.url}`.replace('t_thumb', 't_720p'),
           }
         : undefined,
+      systemRequirements: {
+        minimum: {
+          cpu: "Intel Core i5-4460",
+          gpu: "GTX 1060",
+          ram: 8,
+          storage: 50
+        },
+        recommended: {
+          cpu: "Intel Core i7-8700K",
+          gpu: "RTX 2060",
+          ram: 16,
+          storage: 50
+        }
+      },
+      stores: {
+        steam: game.websites?.find((w: any) => w.category === 3)?.url,
+        epic: game.websites?.find((w: any) => w.category === 13)?.url,
+      }
     }));
 
     return NextResponse.json({

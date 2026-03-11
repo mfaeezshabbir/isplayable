@@ -74,4 +74,8 @@ export const GPUs: GPU[] = [
   // Intel Arc
   { id: 'arc-a770', name: 'Intel Arc A770', vram: 8, architecture: 'Alchemist' },
   { id: 'arc-a750', name: 'Intel Arc A750', vram: 8, architecture: 'Alchemist' },
+
+  // Integrated / No Discrete GPU
+  { id: 'integrated-gen', name: 'Integrated Graphics (General)', vram: 0, architecture: 'Integrated' },
+  { id: 'no-gpu', name: 'No Discrete Graphics Card', vram: 0, architecture: 'None' },
 ];

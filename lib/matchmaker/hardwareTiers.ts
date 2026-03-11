@@ -75,6 +75,10 @@ export const GPU_TIERS = {
   // Intel Arc
   'Intel Arc A770': 8000,
   'Intel Arc A750': 6500,
+
+  // Integrated / No GPU
+  'Integrated Graphics (General)': 800,
+  'No Discrete Graphics Card': 200,
 };
 
 /**

@@ -14,25 +14,28 @@ interface GameCardProps {
 
 const statusConfig = {
   recommended: {
-    label: 'ULTRA READY',
-    bgColor: 'bg-emerald-600/10',
-    borderColor: 'border-emerald-500/30',
-    textColor: 'text-emerald-400',
-    indicator: 'bg-emerald-500',
+    label: 'OPTIMAL SENSOR',
+    bgColor: 'bg-cyan-500/10',
+    borderColor: 'border-cyan-500/30',
+    textColor: 'text-cyan-400',
+    indicator: 'bg-cyan-400',
+    glow: 'shadow-[0_0_15px_rgba(34,211,238,0.4)]',
   },
   minimum: {
-    label: 'PLAYABLE',
-    bgColor: 'bg-amber-600/10',
+    label: 'STABLE LINK',
+    bgColor: 'bg-amber-500/10',
     borderColor: 'border-amber-500/30',
     textColor: 'text-amber-400',
-    indicator: 'bg-amber-500',
+    indicator: 'bg-amber-400',
+    glow: 'shadow-[0_0_15px_rgba(245,158,11,0.3)]',
   },
   unplayable: {
-    label: 'UPGRADE REQ.',
-    bgColor: 'bg-red-600/10',
-    borderColor: 'border-red-500/30',
-    textColor: 'text-red-400',
-    indicator: 'bg-red-500',
+    label: 'CRITICAL VOID',
+    bgColor: 'bg-rose-500/10',
+    borderColor: 'border-rose-500/30',
+    textColor: 'text-rose-400',
+    indicator: 'bg-rose-400',
+    glow: 'shadow-[0_0_15px_rgba(244,63,94,0.3)]',
   },
 };
 
@@ -43,58 +46,70 @@ export function GameCard({ game, playabilityStatus, onClick }: GameCardProps) {
   return (
     <div
       onClick={onClick}
-      className="group relative bg-slate-950/20 rounded-2xl border border-white/5 overflow-hidden cursor-pointer transition-all duration-500 hover:-translate-y-2"
+      className="group relative bg-[#020617] rounded-none border border-white/5 overflow-hidden cursor-pointer transition-all duration-300 hover:border-blue-500/40"
     >
+      {/* Structural Accents */}
+      <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white/20 group-hover:border-blue-400 z-30 transition-colors" />
+      <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-white/20 group-hover:border-blue-400 z-30 transition-colors" />
+      <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-white/20 group-hover:border-blue-400 z-30 transition-colors" />
+      <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-white/20 group-hover:border-blue-400 z-30 transition-colors" />
+
       <div className="relative aspect-[3/4] overflow-hidden">
         <Image
           src={coverUrl}
           alt={game.name}
           fill
-          className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+          className="object-cover transition-all duration-500 group-hover:scale-110 opacity-70 group-hover:opacity-90 grayscale-[0.3] group-hover:grayscale-0"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
         
-        {/* Cyber-Industrial Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+        {/* Scanning Overlay Effect */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[length:100%_2px,3px_100%] pointer-events-none opacity-20" />
+        
+        <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent opacity-90 group-hover:opacity-70 transition-opacity z-20" />
 
-        {/* Tactical Playability Badge */}
+        {/* Status HUD Element */}
         {config && (
-          <div className="absolute top-4 left-4 z-20">
-            <div className={`flex items-center gap-2 px-2.5 py-1 rounded-lg border backdrop-blur-md shadow-2xl ${config.bgColor} ${config.borderColor}`}>
-              <div className={`w-1.5 h-1.5 rounded-full ${config.indicator} animate-pulse shadow-[0_0_8px_currentColor]`} />
-              <span className={`text-[10px] font-black uppercase tracking-[0.15em] ${config.textColor}`}>{config.label}</span>
+          <div className="absolute top-2 right-2 z-30">
+            <div className={`px-2 py-0.5 border skew-x-[-12deg] backdrop-blur-sm ${config.bgColor} ${config.borderColor} ${config.glow}`}>
+              <div className="flex items-center gap-1.5 skew-x-[12deg]">
+                <div className={`w-1 h-1 ${config.indicator} animate-ping`} />
+                <span className={`text-[9px] font-black uppercase tracking-tighter ${config.textColor}`}>{config.label}</span>
+              </div>
             </div>
           </div>
         )}
 
-        {/* Corner Cyber Accent */}
-        <div className="absolute bottom-0 right-0 w-12 h-12 pointer-events-none opacity-20 group-hover:opacity-40 transition-opacity">
-           <div className="absolute bottom-4 right-4 w-4 h-[2px] bg-blue-500" />
-           <div className="absolute bottom-4 right-4 h-4 w-[2px] bg-blue-500" />
+        {/* Year Tag */}
+        <div className="absolute bottom-2 left-2 z-30 flex items-center gap-1 cursor-default">
+           <span className="text-[10px] font-black text-white/40 uppercase tracking-widest bg-black/40 px-1 hover:text-blue-400 transition-colors">
+            {game.release_dates?.[0]?.y || '20XX'}
+           </span>
         </div>
       </div>
 
-      {/* Meta Content */}
-      <div className="p-5 space-y-3 relative bg-slate-950/40 backdrop-blur-xl">
-        <h3 className="text-sm font-black text-white tracking-tight line-clamp-2 uppercase italic leading-tight group-hover:text-blue-400 transition-colors">
-          {game.name}
-        </h3>
-        <div className="flex items-center justify-between pt-1">
-          <div className="flex flex-col">
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none">Release Segment</span>
-            <span className="text-[11px] font-black text-slate-300 mt-1 uppercase italic">{game.release_dates?.[0]?.y || 'Unknown'}</span>
+      {/* Info Block */}
+      <div className="p-4 relative bg-[#020617] border-t border-white/5">
+        <div className="flex flex-col gap-1">
+          <div className="flex justify-between items-start">
+            <h3 className="text-xs font-black text-slate-100 tracking-tighter line-clamp-1 uppercase italic leading-none group-hover:text-blue-400 transition-colors">
+              {game.name}
+            </h3>
+            {game.rating && (
+              <span className="text-[10px] font-black text-blue-500/80 italic ml-2">
+                {(game.rating / 10).toFixed(1)}
+              </span>
+            )}
           </div>
-          {game.rating && (
-            <div className="text-right">
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block leading-none mb-1">Impact</span>
-              <span className="text-sm font-black text-blue-400 italic">{(game.rating / 10).toFixed(1)}</span>
-            </div>
-          )}
+          <div className="flex items-center gap-2 mt-1">
+             <div className="h-[1px] flex-grow bg-slate-800" />
+             <span className="text-[8px] font-bold text-slate-600 uppercase tracking-widest whitespace-nowrap">Sector Verified</span>
+          </div>
         </div>
       </div>
 
-      {/* Hover Background Glow */}
-      <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+      {/* Hover Selection Glow */}
+      <div className="absolute inset-x-0 bottom-0 h-[2px] bg-blue-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
     </div>
   );
 }

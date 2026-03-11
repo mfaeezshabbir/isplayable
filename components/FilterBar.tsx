@@ -22,16 +22,16 @@ const statusColors = {
     indicator: 'bg-blue-500'
   },
   recommended: {
-    active: 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400',
-    indicator: 'bg-emerald-500'
+    active: 'bg-cyan-500/10 border-cyan-500/40 text-cyan-400',
+    indicator: 'bg-cyan-500'
   },
   minimum: {
     active: 'bg-amber-500/10 border-amber-500/40 text-amber-400',
     indicator: 'bg-amber-500'
   },
   unplayable: {
-    active: 'bg-red-500/10 border-red-500/40 text-red-400',
-    indicator: 'bg-red-500'
+    active: 'bg-rose-500/10 border-rose-500/40 text-rose-400',
+    indicator: 'bg-rose-500'
   }
 };
 
@@ -46,7 +46,7 @@ export function FilterBar({
   isLoadingGenres,
 }: FilterBarProps) {
   return (
-    <div className="flex items-center gap-10">
+    <div className="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-10 p-4 lg:p-0">
       {/* Search Input - Cyber Edition */}
       <div className="flex-1 relative group">
         <div className="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none">
@@ -56,45 +56,43 @@ export function FilterBar({
         </div>
         <input
           type="text"
-          placeholder="SEARCH SECTOR..."
+          placeholder="ENTER SEARCH QUERY..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full bg-transparent pl-8 pr-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-white placeholder-slate-800 focus:outline-none focus:placeholder-slate-600 transition-all border-b border-white/5 focus:border-blue-500/40 shadow-[inset_0_-1px_0_rgba(255,255,255,0.02)]"
+          className="w-full bg-transparent pl-8 pr-4 py-4 text-[11px] font-black uppercase tracking-[0.3em] text-white placeholder-slate-700 focus:outline-none focus:placeholder-slate-500 transition-all border-b border-white/5 focus:border-blue-500/40 shadow-[inset_0_-1px_0_rgba(255,255,255,0.01)]"
         />
-        <div className="absolute left-0 bottom-0 h-[1.5px] w-0 bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all duration-700 group-focus-within:w-full" />
+        <div className="absolute left-0 bottom-0 h-[1px] w-0 bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.6)] transition-all duration-1000 group-focus-within:w-full" />
       </div>
 
-      {/* Playability Segment Filter */}
-      <div className="flex gap-4 items-center">
-        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest hidden lg:block">System Status</label>
-        <div className="flex items-center gap-2">
-           {[
-             { id: 'all', label: 'All' },
-             { id: 'recommended', label: 'Optimal' },
-             { id: 'minimum', label: 'Stable' },
-             { id: 'unplayable', label: 'Critical' }
-           ].map((status) => (
-             <button
-               key={status.id}
-               onClick={() => onStatusChange(status.id as any)}
-               className={`relative h-7 px-4 flex items-center rounded-lg overflow-hidden transition-all border ${
-                 selectedStatus === status.id 
-                   ? (statusColors[status.id as keyof typeof statusColors].active)
-                   : 'bg-slate-950/40 border-white/5 text-slate-600 hover:text-slate-300 hover:border-white/10'
-               }`}
-             >
-                <span className="text-[9px] font-black uppercase tracking-[0.15em] z-10 italic">{status.label}</span>
-                {selectedStatus === status.id && (
-                  <div className={`absolute inset-0 bg-gradient-to-t from-current/5 to-transparent pointer-events-none`} />
-                )}
-             </button>
-           ))}
+      <div className="flex flex-wrap items-center gap-8">
+        {/* Playability Segment Filter */}
+        <div className="flex gap-4 items-center">
+          <div className="flex items-center gap-1">
+             {[
+               { id: 'all', label: 'ALL' },
+               { id: 'recommended', label: 'OPTIMAL' },
+               { id: 'minimum', label: 'STABLE' },
+               { id: 'unplayable', label: 'CRITICAL' }
+             ].map((status) => (
+               <button
+                 key={status.id}
+                 onClick={() => onStatusChange(status.id as any)}
+                 className={`relative h-8 px-4 flex items-center transition-all border skew-x-[-15deg] ${
+                   selectedStatus === status.id 
+                     ? (statusColors[status.id as keyof typeof statusColors].active)
+                     : 'bg-[#020617] border-white/5 text-slate-600 hover:text-slate-400 hover:border-white/20'
+                 }`}
+               >
+                  <span className="text-[9px] font-black uppercase tracking-[0.2em] z-10 italic skew-x-[15deg]">{status.label}</span>
+                  {selectedStatus === status.id && (
+                    <div className="absolute top-0 right-0 w-1 h-1 bg-current animate-pulse skew-x-[15deg]" />
+                  )}
+               </button>
+             ))}
+          </div>
         </div>
-      </div>
 
-      {/* Genre Selector */}
-      <div className="flex items-center gap-4">
-        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest hidden lg:block">Category</label>
+        {/* Genre Selector */}
         <div className="relative group">
           <select
             value={selectedGenre}
