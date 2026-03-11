@@ -112,17 +112,6 @@ export default function Home() {
                 />
               </div>
 
-              {/* Virtual Upgrade Hint */}
-              <div className="mt-6 flex items-start gap-3 p-4 bg-amber-500/5 border border-amber-500/10 rounded-xl">
-                <div className="text-amber-500 mt-0.5">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <p className="text-[10px] font-medium leading-relaxed text-amber-200/60 uppercase tracking-wider">
-                  Adjust the sliders to simulate hardware upgrades and visualize potential performance gains in the command center.
-                </p>
-              </div>
             </section>
 
             {/* Quick Status Summary */}

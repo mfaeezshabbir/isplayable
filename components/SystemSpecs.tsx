@@ -139,7 +139,22 @@ export function SystemSpecs({ onSpecsChange }: SystemSpecsProps) {
                   </button>
                 ))
               ) : (
-                <div className="px-4 py-3 text-[10px] font-bold text-slate-600 uppercase italic">No matches in local database</div>
+                <div className="p-1">
+                  <div className="px-3 py-4 text-[10px] font-bold text-slate-600 uppercase italic">No exact matches in database</div>
+                  <button
+                    onClick={() => {
+                      const newSpecs = { ...specs, cpu: cpuSearch, cpuCores: 4 };
+                      setSpecs(newSpecs);
+                      setCpuSearch('');
+                      setShowCpuDropdown(false);
+                      onSpecsChange?.(newSpecs);
+                    }}
+                    className="w-full text-left px-4 py-3 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/10 hover:border-blue-500/30 rounded-lg transition-all"
+                  >
+                    <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Legacy/Custom Override</p>
+                    <p className="text-sm font-bold text-white truncate italic">"{cpuSearch}"</p>
+                  </button>
+                </div>
               )}
             </div>
           )}
@@ -177,7 +192,22 @@ export function SystemSpecs({ onSpecsChange }: SystemSpecsProps) {
                   </button>
                 ))
               ) : (
-                <div className="px-4 py-3 text-[10px] font-bold text-slate-600 uppercase italic">No matches in local database</div>
+                <div className="p-1">
+                  <div className="px-3 py-4 text-[10px] font-bold text-slate-600 uppercase italic">No exact matches in database</div>
+                  <button
+                    onClick={() => {
+                      const newSpecs = { ...specs, gpu: gpuSearch };
+                      setSpecs(newSpecs);
+                      setGpuSearch('');
+                      setShowGpuDropdown(false);
+                      onSpecsChange?.(newSpecs);
+                    }}
+                    className="w-full text-left px-4 py-3 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/10 hover:border-blue-500/30 rounded-lg transition-all"
+                  >
+                    <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Legacy/Custom Override</p>
+                    <p className="text-sm font-bold text-white truncate italic">"{gpuSearch}"</p>
+                  </button>
+                </div>
               )}
             </div>
           )}
@@ -200,16 +230,27 @@ export function SystemSpecs({ onSpecsChange }: SystemSpecsProps) {
               step="2"
               value={specs.ram}
               onChange={(e) => handleRamChange(parseInt(e.target.value))}
-              className="w-full h-1 bg-slate-800 rounded-full appearance-none cursor-pointer accent-blue-500 hover:accent-blue-400 transition-all"
+              className="w-full h-1 bg-slate-800 rounded-full appearance-none cursor-pointer accent-blue-500 hover:accent-blue-400 transition-all [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-400 [&::-webkit-slider-thumb]:shadow-[0_0_10px_rgba(96,165,250,0.8)]"
             />
             {/* Tick Marks for Common RAM sizes */}
-            <div className="absolute inset-x-0 bottom-0 flex justify-between px-0.5">
-              {[8, 16, 32, 64, 128].map(size => (
-                <div key={size} className="flex flex-col items-center gap-1">
-                  <div className={`w-0.5 h-1.5 rounded-full ${specs.ram >= size ? 'bg-blue-500/40' : 'bg-slate-800'}`} />
-                  <span className={`text-[8px] font-black ${specs.ram === size ? 'text-blue-400' : 'text-slate-700'} transition-colors`}>{size}G</span>
-                </div>
-              ))}
+            <div className="absolute inset-x-0 bottom-0 flex w-full">
+              {[2, 8, 16, 32, 64, 128].map((size) => {
+                // Calculate percentage position: (size - min) / (max - min)
+                const position = ((size - 2) / (128 - 2)) * 100;
+                return (
+                  <button 
+                    key={size} 
+                    onClick={() => handleRamChange(size)}
+                    className="absolute flex flex-col items-center gap-1 -translate-x-1/2 group/label cursor-pointer"
+                    style={{ left: `${position}%` }}
+                  >
+                    <div className={`w-0.5 h-1.5 rounded-full transition-all ${specs.ram >= size ? 'bg-blue-500/60' : 'bg-slate-800'} group-hover/label:bg-blue-400`} />
+                    <span className={`text-[8px] font-black transition-all ${specs.ram === size ? 'text-blue-400' : 'text-slate-700'} group-hover/label:text-blue-300 whitespace-nowrap`}>
+                      {size}G
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
