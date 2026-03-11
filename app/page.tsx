@@ -54,6 +54,21 @@ export default function Home() {
     return reports;
   }, [userSpecs, games]);
 
+  // Derived statistics for the HUD
+  const stats = useMemo(() => {
+    let optimal = 0;
+    let stable = 0;
+    let critical = 0;
+
+    playabilityReports.forEach((report) => {
+      if (report.status === 'recommended') optimal++;
+      else if (report.status === 'minimum') stable++;
+      else if (report.status === 'unplayable') critical++;
+    });
+
+    return { optimal, stable, critical };
+  }, [playabilityReports]);
+
   // Get playability report for selected game details
   const selectedGameReport = selectedGameDetails
     ? playabilityReports.get(selectedGameDetails.id) || null
@@ -93,12 +108,10 @@ export default function Home() {
             <section>
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xs font-black text-slate-400 uppercase tracking-widest">Diagnostic HUD</h2>
-                {!userSpecs && (
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-                    <span className="text-[10px] font-black text-blue-400 uppercase text-xs">Scanning...</span>
-                  </div>
-                )}
+                <div className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+                  <span className="text-[10px] font-black text-blue-400 uppercase text-xs">Ready</span>
+                </div>
               </div>
               
               <div className="bg-slate-900/40 border border-blue-500/10 rounded-2xl p-6 relative overflow-hidden group shadow-inner">
@@ -116,17 +129,47 @@ export default function Home() {
 
             {/* Quick Status Summary */}
             <section className="space-y-4">
-               <h2 className="text-xs font-black text-slate-400 uppercase tracking-widest">Match Statistics</h2>
-               <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-slate-900/60 border border-emerald-500/10 p-4 rounded-xl shadow-lg hover:border-emerald-500/30 transition-all cursor-default">
-                    <div className="text-2xl font-black text-emerald-400 italic">42</div>
-                    <div className="text-[9px] font-bold text-slate-500 uppercase mt-1">Optimal Matches</div>
+              <div className="flex items-center justify-between">
+                <h2 className="text-xs font-black text-slate-400 uppercase tracking-widest">Match Statistics</h2>
+                <span className="text-[10px] font-bold text-slate-600 uppercase tracking-tighter italic">Sector Results: {games.length}</span>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-slate-900/60 border border-emerald-500/10 p-4 rounded-xl shadow-lg hover:border-emerald-500/30 transition-all cursor-default group/stat">
+                  <div className="flex items-baseline gap-2">
+                    <div className="text-2xl font-black text-emerald-400 italic leading-none group-hover/stat:scale-110 transition-transform origin-left">{stats.optimal}</div>
+                    <div className="h-1 flex-1 bg-emerald-500/5 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-emerald-500/40 transition-all duration-1000" 
+                        style={{ width: `${games.length > 0 ? (stats.optimal / games.length) * 100 : 0}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="bg-slate-900/60 border border-amber-500/10 p-4 rounded-xl shadow-lg hover:border-amber-500/30 transition-all cursor-default">
-                    <div className="text-2xl font-black text-amber-400 italic">18</div>
-                    <div className="text-[9px] font-bold text-slate-500 uppercase mt-1">Needs Tweaking</div>
+                  <div className="text-[9px] font-black text-slate-500 uppercase mt-2 tracking-widest">Optimal Range</div>
+                </div>
+                <div className="bg-slate-900/60 border border-amber-500/10 p-4 rounded-xl shadow-lg hover:border-amber-500/30 transition-all cursor-default group/stat">
+                  <div className="flex items-baseline gap-2">
+                    <div className="text-2xl font-black text-amber-400 italic leading-none group-hover/stat:scale-110 transition-transform origin-left">{stats.stable}</div>
+                    <div className="h-1 flex-1 bg-amber-500/5 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-amber-500/40 transition-all duration-1000" 
+                        style={{ width: `${games.length > 0 ? (stats.stable / games.length) * 100 : 0}%` }}
+                      />
+                    </div>
                   </div>
-               </div>
+                  <div className="text-[9px] font-black text-slate-500 uppercase mt-2 tracking-widest">Stable Ops</div>
+                </div>
+              </div>
+
+              {/* Critical Warning (only show if results exist) */}
+              {stats.critical > 0 && (
+                <div className="bg-red-500/5 border border-red-500/10 p-3 rounded-lg flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-1 h-1 rounded-full bg-red-500 animate-pulse" />
+                    <span className="text-[9px] font-black text-red-400/80 uppercase tracking-widest">Critical Upgrade Required</span>
+                  </div>
+                  <span className="text-[10px] font-black text-red-400/60 italic">{stats.critical} Records</span>
+                </div>
+              )}
             </section>
           </div>
 

@@ -30,10 +30,15 @@ export function GamesGrid({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4" />
-          <p className="text-slate-400">Loading games...</p>
+      <div className="flex flex-col items-center justify-center py-40 gap-6">
+        <div className="relative w-16 h-16">
+          <div className="absolute inset-0 border-4 border-blue-500/10 rounded-full" />
+          <div className="absolute inset-0 border-4 border-blue-500 rounded-full border-t-transparent animate-[spin_0.8s_linear_infinite]" />
+          <div className="absolute inset-2 border-2 border-white/5 rounded-full animate-[pulse_1.5s_ease-in-out_infinite]" />
+        </div>
+        <div className="space-y-1 text-center">
+          <p className="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em] animate-pulse">Scanning Databases</p>
+          <p className="text-[9px] font-bold text-slate-700 uppercase tracking-widest">Awaiting sector response...</p>
         </div>
       </div>
     );
@@ -41,22 +46,24 @@ export function GamesGrid({
 
   if (games.length === 0) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <div className="text-center text-slate-400">
-          <p className="mb-2">No games found</p>
-          <p className="text-sm">Try adjusting your filters or search query</p>
-        </div>
+      <div className="flex flex-col items-center justify-center py-40 text-center px-10">
+        <div className="w-16 h-[1px] bg-slate-800 mb-8" />
+        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">Zero Matches Found</p>
+        <p className="text-[10px] font-bold text-slate-700 uppercase tracking-widest max-w-[200px] leading-relaxed">
+          The requested search sector returned no viable results.
+        </p>
       </div>
     );
   }
 
   if (filteredGames.length === 0) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <div className="text-center text-slate-400">
-          <p className="mb-2">No games match your filters</p>
-          <p className="text-sm">Try a different {selectedStatus !== 'all' ? 'playability status' : 'filter'}</p>
-        </div>
+      <div className="flex flex-col items-center justify-center py-40 text-center px-10">
+        <div className="w-16 h-[1px] bg-slate-800 mb-8" />
+        <p className="text-[10px] font-black text-red-500/80 uppercase tracking-[0.3em] mb-2">Filtered Output Null</p>
+        <p className="text-[10px] font-bold text-slate-700 uppercase tracking-widest max-w-[200px] leading-relaxed">
+          No records match the active playability parameters ({selectedStatus.toUpperCase()}).
+        </p>
       </div>
     );
   }
